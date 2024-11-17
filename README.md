@@ -1,6 +1,9 @@
 # Brahma Disaster Management System
 
-![Brahma Banner](C:/xampp/htdocs/brahma/images/Screenshot%20(960).png)
+# Ninja Food
+
+![Brahma Banner](images/Screenshot%20(960).png)
+
 
 **Brahma** is an advanced disaster management system designed to assist individuals and organizations in responding effectively during emergencies. The system leverages cutting-edge technology, such as drones and quadrupedal robots, to support disaster relief efforts, ensuring faster and more efficient operations.
 
