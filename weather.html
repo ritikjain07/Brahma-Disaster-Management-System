@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Management App</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 20px;
+            width: 80%;
+            max-width: 600px;
+        }
+        .map-container {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+        }
+        .weather-result h2, .weather-result p, .weather-result .forecast {
+            margin: 5px 0;
+        }
+        .forecast {
+            display: flex;
+            justify-content: space-around;
+        }
+        .forecast-item {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Disaster Management App</h1>
+        <div id="weather-result" class="weather-result">
+            <h2 id="location-name"></h2>
+            <p id="temperature"></p>
+            <p id="condition"></p>
+            <p id="humidity"></p>
+            <p id="wind-speed"></p>
+            <div class="forecast">
+                <div class="forecast-item">
+                    <h3>Day 1</h3>
+                    <p id="day1"></p>
+                </div>
+                <div class="forecast-item">
+                    <h3>Day 2</h3>
+                    <p id="day2"></p>
+                </div>
+                <div class="forecast-item">
+                    <h3>Day 3</h3>
+                    <p id="day3"></p>
+                </div>
+            </div>
+        </div>
+        <div id="map" class="map-container"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script>
+        let map, routingControl;
+        let userLat, userLon;
+
+        // Predefined data for disasters, hospitals, and shelters
+        const disasterData = [
+            { type: 'Earthquake', lat: 34.0522, lon: -118.2437 },
+            { type: 'Flood', lat: 29.7604, lon: -95.3698 },
+            { type: 'Fire', lat: 37.7749, lon: -122.4194 }
+        ];
+        
+        const hospitalData = [
+            { name: 'Hospital 1', lat: 34.0722, lon: -118.2437 },
+            { name: 'Hospital 2', lat: 29.7704, lon: -95.3698 }
+        ];
+
+        const shelterData = [
+            { name: 'Shelter 1', lat: 34.0622, lon: -118.2537 },
+            { name: 'Shelter 2', lat: 29.7504, lon: -95.3598 }
+        ];
+
+        async function getWeather(lat, lon) {
+            const apiKey = '9ed7fc6bfb9a4f75bec34602241507';
+            const weatherUrl = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}`;
+            const forecastUrl = `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=4`;
+
+            try {
+                const [weatherResponse, forecastResponse] = await Promise.all([
+                    fetch(weatherUrl),
+                    fetch(forecastUrl)
+                ]);
+
+                if (!weatherResponse.ok || !forecastResponse.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const weatherData = await weatherResponse.json();
+                const forecastData = await forecastResponse.json();
+
+                document.getElementById('location-name').textContent = `${weatherData.location.name}, ${weatherData.location.country}`;
+                document.getElementById('temperature').textContent = `Temperature: ${weatherData.current.temp_c}°C`;
+                document.getElementById('condition').textContent = `Condition: ${weatherData.current.condition.text}`;
+                document.getElementById('humidity').textContent = `Humidity: ${weatherData.current.humidity}%`;
+                document.getElementById('wind-speed').textContent = `Wind Speed: ${weatherData.current.wind_kph} kph`;
+
+                document.getElementById('day1').textContent = `Temperature: ${forecastData.forecast.forecastday[0].day.avgtemp_c}°C, Condition: ${forecastData.forecast.forecastday[0].day.condition.text}`;
+                document.getElementById('day2').textContent = `Temperature: ${forecastData.forecast.forecastday[1].day.avgtemp_c}°C, Condition: ${forecastData.forecast.forecastday[1].day.condition.text}`;
+                document.getElementById('day3').textContent = `Temperature: ${forecastData.forecast.forecastday[2].day.avgtemp_c}°C, Condition: ${forecastData.forecast.forecastday[2].day.condition.text}`;
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+                alert('Could not retrieve weather data. Please try again.');
+            }
+        }
+
+        function showMap(lat, lon) {
+            map = L.map('map').setView([lat, lon], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            const userMarker = L.marker([lat, lon]).addTo(map)
+                .bindPopup('You are here')
+                .openPopup();
+
+            map.on('click', onMapClick);
+
+            function onMapClick(e) {
+                const { lat: destLat, lng: destLon } = e.latlng;
+
+                if (routingControl) {
+                    map.removeControl(routingControl);
+                }
+
+                routingControl = L.Routing.control({
+                    waypoints: [
+                        L.latLng(userLat, userLon),
+                        L.latLng(destLat, destLon)
+                    ],
+                    routeWhileDragging: true
+                }).addTo(map);
+            }
+
+            // Add disaster markers
+            disasterData.forEach(disaster => {
+                L.marker([disaster.lat, disaster.lon])
+                    .addTo(map)
+                    .bindPopup(`${disaster.type}`);
+            });
+
+            // Add hospital markers
+            hospitalData.forEach(hospital => {
+                L.marker([hospital.lat, hospital.lon], { icon: L.icon({ iconUrl: 'https://cdn-icons-png.flaticon.com/512/883/883408.png', iconSize: [30, 30] }) })
+                    .addTo(map)
+                    .bindPopup(`${hospital.name}`);
+            });
+
+            // Add shelter markers
+            shelterData.forEach(shelter => {
+                L.marker([shelter.lat, shelter.lon], { icon: L.icon({ iconUrl: 'https://cdn-icons-png.flaticon.com/512/4825/4825898.png', iconSize: [30, 30] }) })
+                    .addTo(map)
+                    .bindPopup(`${shelter.name}`);
+            });
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    userLat = position.coords.latitude;
+                    userLon = position.coords.longitude;
+
+                    getWeather(userLat, userLon);
+                    showMap(userLat, userLon);
+                }, (error) => {
+                    console.error('Error occurred. Error code: ' + error.code);
+                    alert('Geolocation is not enabled. Please enable it in your browser settings.');
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            getLocation();
+        });
+    </script>
+</body>
+</html>

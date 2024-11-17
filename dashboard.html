@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brahma Dashboard</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    
+    .container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    
+    header {
+        background: #333;
+        color: #fff;
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    nav {
+        background: #555;
+        color: #fff;
+        padding: 1rem;
+    }
+    
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: space-around;
+    }
+    
+    nav ul li a {
+        color: #fff;
+        text-decoration: none;
+    }
+    
+    main {
+        flex: 1;
+        padding: 1rem;
+    }
+    
+    .dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+    
+    .card {
+        background: #fff;
+        padding: 1rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    footer {
+        background: #333;
+        color: #fff;
+        text-align: center;
+        padding: 1rem;
+    }
+    
+</style>
+<body>
+    <div class="container">
+        <header>
+            <h1>Brahma Disaster Management Dashboard</h1>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Disasters</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section class="dashboard">
+                <div class="card">
+                    <h2>Ongoing Disasters</h2>
+                    <canvas id="disastersChart"></canvas>
+                </div>
+                <div class="card">
+                    <h2>Users Online</h2>
+                    <div id="usersOnline">Loading...</div>
+                </div>
+                <div class="card">
+                    <h2>Recent Activities</h2>
+                    <ul id="recentActivities"></ul>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2024 Brahma Disaster Management</p>
+        </footer>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Dummy data for charts and user stats
+            const ongoingDisastersData = [12, 19, 3, 5, 2, 3];
+            const recentActivities = [
+                "User John reported a flood.",
+                "User Jane requested medical aid.",
+                "User Alex marked safe.",
+                "User Maria updated her profile.",
+                "User Mark requested evacuation."
+            ];
+        
+            // Chart.js setup for disasters chart
+            const ctx = document.getElementById('disastersChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                    datasets: [{
+                        label: 'Ongoing Disasters',
+                        data: ongoingDisastersData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        
+            // Display number of users online (dummy data)
+            document.getElementById('usersOnline').textContent = '123 Users Online';
+        
+            // Populate recent activities
+            const activitiesList = document.getElementById('recentActivities');
+            recentActivities.forEach(activity => {
+                const listItem = document.createElement('li');
+                listItem.textContent = activity;
+                activitiesList.appendChild(listItem);
+            });
+        });
+        
+    </script>
+</body>
+</html>
