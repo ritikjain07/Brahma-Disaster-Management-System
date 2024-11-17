@@ -95,5 +95,10 @@ We welcome contributions to improve Brahma! If you would like to help out:
 - Thanks to the open-source libraries and APIs used to enhance the functionality of Brahma.
 - The design and layout were inspired by modern disaster management systems and web design principles.
 
+## **Contact**  
+For queries or feedback, feel free to contact me:  
+**Ritik Jain**  
+📧 Email: [ritikjain4560@gmail.com](mailto:ritikjain4560@gmail.com)  
+📍 GitHub: [ritikjain07](https://github.com/ritikjain07)  
 ---
 
