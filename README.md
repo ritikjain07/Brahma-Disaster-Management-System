@@ -1,7 +1,5 @@
 # Brahma Disaster Management System
 
-# Ninja Food
-
 ![Brahma Banner](images/Screenshot%20(960).png)
 
 
