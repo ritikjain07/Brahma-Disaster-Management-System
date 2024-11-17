@@ -91,10 +91,6 @@ We welcome contributions to improve Brahma! If you would like to help out:
 4. Push to the branch (`git push origin feature-name`)
 5. Create a pull request
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## Acknowledgements
 
 - Special thanks to the contributors of this project.
@@ -103,7 +99,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-### Notes:
-- The `C:/xampp/htdocs/brahma/images/Screenshot%20(960).png` image path is local to your system, and it will not show up in the README unless hosted publicly or accessed directly in your local environment.
-- For better portability, I replaced placeholder image links with generic ones from [via.placeholder.com](https://via.placeholder.com/), which you can update to actual URLs or local paths once the images are accessible.
-- Let me know if you need any further adjustments to the `README.md`!
