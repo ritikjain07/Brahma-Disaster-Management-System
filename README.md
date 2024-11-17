@@ -71,19 +71,15 @@ Here are some screenshots of the Brahma Disaster Management System in action:
 
 1. **Disaster Reporting Page**
 
-   ![Disaster Reporting](https://via.placeholder.com/500x300?text=Disaster+Reporting+Page)
+   ![Disaster Reporting Page](images/Screenshot%20(961).png)
 
-2. **Weather Forecasts Display**
+2. **Medical Aid and Hospitals Nearby**
 
-   ![Weather Forecast](https://via.placeholder.com/500x300?text=Weather+Forecast+Page)
+   ![Medical Aid and Hospitals Nearby](images/Screenshot%20(963).png)
 
-3. **Medical Aid and Hospitals Nearby**
+3. **Donation Page Using Razorpay**
 
-   ![Medical Aid](https://via.placeholder.com/500x300?text=Medical+Aid+Page)
-
-4. **Missing Person Reporting**
-
-   ![Missing Person](https://via.placeholder.com/500x300?text=Missing+Person+Page)
+   ![Donation Page Using Razorpay](images/Screenshot%20(968).png)
 
 ## Contributing
 
