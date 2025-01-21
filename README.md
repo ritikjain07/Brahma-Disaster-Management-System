@@ -18,7 +18,7 @@
 
 - **Frontend**: HTML, CSS, JavaScript, Tailwind CSS, Leaflet.js (for mapping)
 - **Backend**: PHP, MySQL (for data storage), and XAMPP
-- **APIs**: Weather API for real-time weather data, Google Maps API for location-based services
+- **APIs**: Weather API for real-time weather data
 - **Robotics**: Drones and quadrupedal robots for disaster management operations
 
 ## Installation
