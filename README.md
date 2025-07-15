@@ -1,11 +1,10 @@
 # Brahma Disaster Management System
 
-![Brahma Banner](images/Screenshot%20(960).png)
-
+![Brahma Banner](assets/images/Screenshot%20(960).png)
 
 **Brahma** is an advanced disaster management system designed to assist individuals and organizations in responding effectively during emergencies. The system leverages cutting-edge technology, such as drones and quadrupedal robots, to support disaster relief efforts, ensuring faster and more efficient operations.
 
-## Features
+## 🚀 Features
 
 - **Disaster Reporting**: Allows users to report disasters and upload relevant details, helping authorities assess the situation quickly.
 - **Weather Forecasts**: Displays real-time weather updates to assist with disaster preparedness.
@@ -13,92 +12,163 @@
 - **Missing Person Reporting**: Users can report missing persons and upload images for rescue teams to act swiftly.
 - **Evacuation Requests**: Offers users an easy way to request evacuation assistance during emergencies.
 - **Points of Interest**: Displays essential points of interest such as hospitals, shelters, and rescue stations on an interactive map.
+- **Donation System**: Secure donation platform with Razorpay integration for supporting disaster relief efforts.
+- **User Authentication**: Secure login and registration system with session management.
+- **Admin Panel**: Administrative interface for managing system operations and user data.
 
-## Technology Stack
+## 🛠️ Technology Stack
 
-- **Frontend**: HTML, CSS, JavaScript, Tailwind CSS, Leaflet.js (for mapping)
-- **Backend**: PHP, MySQL (for data storage), and XAMPP
-- **APIs**: Weather API for real-time weather data
-- **Robotics**: Drones and quadrupedal robots for disaster management operations
+- **Frontend**: HTML5, CSS3, JavaScript ES6, Tailwind CSS, Font Awesome
+- **Backend**: PHP 7.4+, MySQL 8.0+
+- **Libraries**: PHPMailer for email functionality, Leaflet.js for interactive mapping
+- **Payment Integration**: Razorpay for secure donation processing
+- **Development Environment**: XAMPP (Apache, PHP, MySQL)
+- **Version Control**: Git & GitHub
+- **Security**: Input sanitization, CSRF protection, prepared statements
 
-## Installation
+## 📁 Project Structure
 
-To set up the Brahma Disaster Management System locally, follow these steps:
+```
+brahma/
+├── index.php                 # Main landing page
+├── .htaccess                 # Apache configuration
+├── README.md                 # Project documentation
+├── admin/                    # Admin panel
+├── assets/                   # Static assets (CSS, JS, images)
+├── auth/                     # Authentication system
+├── database/                 # Database configuration
+├── includes/                 # Common includes
+├── libs/                     # Third-party libraries
+├── pages/                    # Application pages
+├── uploads/                  # User uploads
+└── mapify/                   # Map module
+```
+
+## 🚀 Installation
 
 ### Prerequisites
 
-- Install [XAMPP](https://www.apachefriends.org/index.html) (includes Apache, PHP, MySQL)
-- Install [Composer](https://getcomposer.org/)
-- Have a GitHub account for repository access
+- [XAMPP](https://www.apachefriends.org/index.html) (Apache, PHP 7.4+, MySQL 8.0+)
+- [Composer](https://getcomposer.org/) (optional, for dependency management)
+- Modern web browser (Chrome, Firefox, Safari, Edge)
 
-### Steps
+### Setup Steps
 
-1. Clone the repository:
+1. **Clone the repository**:
    ```bash
    git clone https://github.com/ritikjain07/Brahma-Disaster-Management-System.git
    cd Brahma-Disaster-Management-System
    ```
 
-2. Place the project folder into your XAMPP `htdocs` directory.
+2. **Setup XAMPP**:
+   - Place the project folder in your XAMPP `htdocs` directory
+   - Start Apache and MySQL services from XAMPP Control Panel
 
-3. Start the XAMPP server (Apache & MySQL).
+3. **Database Configuration**:
+   - Create a database named `brahma_db`
+   - Import the database schema from `database/schema.sql`
+   - Configure database connection in `database/config.php`
 
-4. Create a database in MySQL named `brahma_db`:
-   ```sql
-   CREATE DATABASE brahma_db;
+4. **File Permissions**:
+   - Ensure `uploads/` directory has write permissions
+   - Set appropriate permissions for configuration files
+
+5. **Access the Application**:
+   ```
+   http://localhost/brahma/
    ```
 
-5. Configure database connection settings in `config.php` (if necessary).
+## 🎯 Usage
 
-6. Open the project in a web browser:
-   ```
-   http://localhost/brahma
-   ```
+### User Features
+1. **Registration/Login**: Create an account to access all features
+2. **Disaster Reporting**: Report emergencies with location and details
+3. **Medical Aid**: Find nearby hospitals and medical facilities
+4. **Missing Person Reports**: Report and search for missing individuals
+5. **Weather Information**: Get real-time weather updates and forecasts
+6. **Survival Tips**: Access emergency preparedness information
+7. **Donations**: Support disaster relief efforts through secure payments
+8. **Profile Management**: Update personal information and preferences
 
-## Usage
+### Admin Features
+1. **Dashboard**: Overview of system statistics and activities
+2. **User Management**: Monitor and manage user accounts
+3. **Report Management**: Review and process disaster reports
+4. **Content Management**: Update survival tips and information
 
-1. **Sign Up/Login**: Create an account to report disasters, track weather forecasts, or request medical assistance.
-2. **Report a Disaster**: Fill out a disaster form with the relevant details and send it to the response teams.
-3. **View Medical Aid**: Access the nearest hospitals and book appointments with doctors.
-4. **Find Missing Persons**: Report missing individuals by uploading images and descriptions.
-5. **Request Evacuation**: Request help with evacuation by submitting your location.
+## 🔐 Security Features
 
-## Screenshots
+- **Input Validation**: Comprehensive sanitization of all user inputs
+- **SQL Injection Prevention**: Prepared statements for database queries
+- **CSRF Protection**: Token-based protection for forms
+- **Session Security**: Secure session management and timeout
+- **File Upload Security**: Validation and restriction of uploaded files
+- **XSS Protection**: Output encoding and content security policies
 
-Here are some screenshots of the Brahma Disaster Management System in action:
+## 📸 Screenshots
 
-1. **Disaster Reporting Page**
+1. **Main Dashboard**
+   ![Main Dashboard](assets/images/Screenshot%20(960).png)
 
-   ![Disaster Reporting Page](images/Screenshot%20(961).png)
+2. **Disaster Reporting**
+   ![Disaster Reporting](assets/images/Screenshot%20(961).png)
 
-2. **Medical Aid and Hospitals Nearby**
+3. **Medical Aid Services**
+   ![Medical Aid](assets/images/Screenshot%20(963).png)
 
-   ![Medical Aid and Hospitals Nearby](images/Screenshot%20(963).png)
+4. **Donation Platform**
+   ![Donation Page](assets/images/Screenshot%20(968).png)
 
-3. **Donation Page Using Razorpay**
+## 🤝 Contributing
 
-   ![Donation Page Using Razorpay](images/Screenshot%20(968).png)
+We welcome contributions to improve Brahma! Here's how you can help:
 
-## Contributing
+1. **Fork the repository** on GitHub
+2. **Create a feature branch**: `git checkout -b feature-name`
+3. **Make your changes** and test thoroughly
+4. **Commit your changes**: `git commit -am 'Add new feature'`
+5. **Push to the branch**: `git push origin feature-name`
+6. **Create a pull request** with a detailed description
 
-We welcome contributions to improve Brahma! If you would like to help out:
+### Contribution Guidelines
+- Follow PHP PSR standards
+- Write meaningful commit messages
+- Add comments for complex logic
+- Test your changes thoroughly
+- Update documentation as needed
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature-name`)
-3. Commit your changes (`git commit -am 'Add new feature'`)
-4. Push to the branch (`git push origin feature-name`)
-5. Create a pull request
+## 📝 License
 
-## Acknowledgements
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-- Special thanks to the contributors of this project.
-- Thanks to the open-source libraries and APIs used to enhance the functionality of Brahma.
-- The design and layout were inspired by modern disaster management systems and web design principles.
+## 🙏 Acknowledgements
 
-## **Contact**  
-For queries or feedback, feel free to contact me:  
-**Ritik Jain**  
-📧 Email: [ritikjain4560@gmail.com](mailto:ritikjain4560@gmail.com)  
-📍 GitHub: [ritikjain07](https://github.com/ritikjain07)  
+- **Open Source Libraries**: PHPMailer, Leaflet.js, Tailwind CSS
+- **APIs**: Weather API integration for real-time data
+- **Design Inspiration**: Modern disaster management systems and emergency response best practices
+- **Testing**: Community feedback and beta testing support
+
+## 📞 Contact & Support
+
+**Developer**: Ritik Jain  
+📧 **Email**: [ritikjain4560@gmail.com](mailto:ritikjain4560@gmail.com)  
+🔗 **GitHub**: [ritikjain07](https://github.com/ritikjain07)  
+🌐 **Project Repository**: [Brahma-Disaster-Management-System](https://github.com/ritikjain07/Brahma-Disaster-Management-System)
+
 ---
+
+## 🚀 Future Enhancements
+
+- **Mobile Application**: Native iOS and Android apps
+- **Real-time Notifications**: Push notifications for emergencies
+- **AI Integration**: Machine learning for disaster prediction
+- **IoT Integration**: Sensor data integration for real-time monitoring
+- **Drone Integration**: Autonomous drone deployment for rescue operations
+- **API Development**: RESTful API for third-party integrations
+- **Multi-language Support**: Localization for global use
+- **Advanced Analytics**: Data visualization and reporting dashboard
+
+---
+
+*Last updated: July 2025*
 

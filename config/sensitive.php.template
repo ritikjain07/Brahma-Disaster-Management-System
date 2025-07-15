@@ -1,0 +1,33 @@
+<?php
+/**
+ * Sensitive Configuration Template
+ * Copy this file to sensitive.php and fill in your actual credentials
+ * WARNING: Never commit the actual sensitive.php file to version control
+ */
+
+// Email Configuration (PHPMailer)
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_USERNAME', 'your_email@gmail.com');
+define('SMTP_PASSWORD', 'your_app_password_here');
+define('SMTP_PORT', 587);
+define('SMTP_ENCRYPTION', 'tls');
+define('EMAIL_FROM', 'no-reply@brahma.com');
+define('EMAIL_FROM_NAME', 'Brahma Disaster Management');
+
+// Payment Gateway Configuration (Razorpay)
+define('RAZORPAY_KEY_ID', 'your_razorpay_key_id');
+define('RAZORPAY_KEY_SECRET', 'your_razorpay_secret_key');
+
+// API Keys
+define('WEATHER_API_KEY', 'your_weather_api_key');
+define('MAPS_API_KEY', 'your_maps_api_key');
+
+// Other sensitive configurations
+define('ADMIN_EMAIL', 'admin@brahma.com');
+define('ENCRYPTION_KEY', 'your_32_character_encryption_key');
+define('JWT_SECRET', 'your_jwt_secret_key');
+
+// Development/Production flags
+define('DEBUG_MODE', false);
+define('ENVIRONMENT', 'production'); // 'development' or 'production'
+?>
