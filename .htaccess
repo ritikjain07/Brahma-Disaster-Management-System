@@ -1,0 +1,77 @@
+# Brahma Disaster Management System
+# .htaccess Configuration
+
+# Enable URL rewriting
+RewriteEngine On
+
+# Security headers
+Header always set X-Frame-Options DENY
+Header always set X-Content-Type-Options nosniff
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+# Hide sensitive files
+<Files ~ "^\.">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Protect configuration files
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Protect database files
+<Files "*.sql">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Protect PHP files in uploads directory
+<Directory "uploads">
+    <Files "*.php">
+        Order allow,deny
+        Deny from all
+    </Files>
+</Directory>
+
+# Custom error pages
+ErrorDocument 404 /brahma/pages/error-404.php
+ErrorDocument 500 /brahma/pages/error-500.php
+
+# Disable directory browsing
+Options -Indexes
+
+# Enable compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# Set cache headers
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/pdf "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# Friendly URLs (Optional - for future implementation)
+# RewriteRule ^about/?$ pages/about-page.php [L,QSA]
+# RewriteRule ^services/?$ pages/service-page.php [L,QSA]
+# RewriteRule ^contact/?$ pages/contact-page.php [L,QSA]
+# RewriteRule ^login/?$ auth/login.php [L,QSA]
+# RewriteRule ^signup/?$ auth/signup.php [L,QSA]

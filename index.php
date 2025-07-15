@@ -1,52 +1,213 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+/**
+ * Brahma Disaster Management System - Home Page
+ * 
+ * @author Ritik Jain
+ * @version 1.0
+ */
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Brahma - Disaster Management</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
-  <style>
+// Set up paths and configuration
+$basePath = './';
+$pageTitle = 'Home';
+$bodyClass = 'home-page';
+
+// Include necessary files
+require_once 'includes/functions.php';
+startSecureSession();
+
+// Additional head content for home page
+$additionalHead = '
+<style>
     body {
-      background: url('bgidn.jpg') no-repeat center center fixed;
-      background-size: cover;
-      padding-top: 4rem;
-      position: relative;
+        background: url("assets/images/bgidn.jpg") no-repeat center center fixed;
+        background-size: cover;
+        position: relative;
     }
-
-
+    
     .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: -1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
     }
-
+    
     .hero {
-      background: rgba(0, 0, 0, 0.7);
-      padding: 2rem;
-      border-radius: 10px;
-      margin-top: 2rem;
-      max-width: 800px;
-      width: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 2rem;
+        border-radius: 10px;
+        margin-top: 2rem;
+        max-width: 800px;
+        width: 100%;
     }
-
+    
     .sos-button {
-      background: radial-gradient(circle, hsla(10, 74%, 63%, 1) 0%, hsla(0, 73%, 42%, 1) 100%);
-      transition: transform 0.3s ease-in-out;
-      width: 80px;
-      height: 80px;
-      font-size: 2.5rem;
+        background: radial-gradient(circle, hsla(10, 74%, 63%, 1) 0%, hsla(0, 73%, 42%, 1) 100%);
+        transition: transform 0.3s ease-in-out;
+        width: 80px;
+        height: 80px;
+        font-size: 2.5rem;
     }
-
+    
     .sos-button:hover {
-      transform: scale(1.1);
+        transform: scale(1.1);
     }
+</style>
+';
+
+// Include header
+include 'includes/header.php';
+?>
+
+<div class="overlay"></div>
+
+<!-- Hero Section -->
+<section class="min-h-screen flex items-center justify-center px-4">
+    <div class="hero text-center text-white">
+        <h1 class="text-4xl md:text-6xl font-bold mb-4">
+            Welcome to <span class="text-blue-400">Brahma</span>
+        </h1>
+        <p class="text-lg md:text-xl mb-8">
+            Advanced Disaster Management System for Emergency Response
+        </p>
+        <p class="text-base md:text-lg mb-8">
+            Leveraging cutting-edge technology including drones and quadrupedal robots to support disaster relief efforts, ensuring faster and more efficient operations.
+        </p>
+        
+        <!-- Emergency SOS Button -->
+        <div class="mb-8">
+            <button class="sos-button rounded-full text-white font-bold shadow-lg hover:shadow-xl mx-auto flex items-center justify-center" onclick="emergencyAlert()">
+                SOS
+            </button>
+            <p class="text-sm mt-2 text-gray-300">Emergency Button</p>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="pages/emergencyForm.php" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                Report Emergency
+            </a>
+            <a href="pages/weather.php" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                <i class="fas fa-cloud-sun mr-2"></i>
+                Weather Forecast
+            </a>
+            <a href="pages/medical_aid.php" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                <i class="fas fa-heartbeat mr-2"></i>
+                Medical Aid
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-16 bg-gray-100">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">Our Features</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
+                <div class="text-4xl text-red-500 mb-4">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Disaster Reporting</h3>
+                <p class="text-gray-600">Report disasters and upload relevant details to help authorities assess situations quickly.</p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
+                <div class="text-4xl text-blue-500 mb-4">
+                    <i class="fas fa-cloud-sun"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Weather Forecasts</h3>
+                <p class="text-gray-600">Real-time weather updates to assist with disaster preparedness and planning.</p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
+                <div class="text-4xl text-green-500 mb-4">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Medical Aid</h3>
+                <p class="text-gray-600">Find nearest hospitals, book appointments, and view essential medical contacts.</p>
+            </div>
+            
+            <!-- Feature 4 -->
+            <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
+                <div class="text-4xl text-purple-500 mb-4">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Missing Person</h3>
+                <p class="text-gray-600">Report missing persons and upload images for rescue teams to act swiftly.</p>
+            </div>
+            
+            <!-- Feature 5 -->
+            <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
+                <div class="text-4xl text-orange-500 mb-4">
+                    <i class="fas fa-route"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Evacuation Requests</h3>
+                <p class="text-gray-600">Easy way to request evacuation assistance during emergencies.</p>
+            </div>
+            
+            <!-- Feature 6 -->
+            <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
+                <div class="text-4xl text-teal-500 mb-4">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Points of Interest</h3>
+                <p class="text-gray-600">Essential locations like hospitals, shelters, and rescue stations on interactive maps.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Emergency Services Section -->
+<section class="py-16 bg-blue-900 text-white">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-8">Emergency Services</h2>
+        <p class="text-xl mb-8">Quick access to essential emergency services</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-red-600 rounded-lg p-6">
+                <i class="fas fa-fire text-4xl mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Fire Department</h3>
+                <p class="text-2xl font-bold">911</p>
+            </div>
+            
+            <div class="bg-blue-600 rounded-lg p-6">
+                <i class="fas fa-shield-alt text-4xl mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Police</h3>
+                <p class="text-2xl font-bold">911</p>
+            </div>
+            
+            <div class="bg-green-600 rounded-lg p-6">
+                <i class="fas fa-ambulance text-4xl mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Ambulance</h3>
+                <p class="text-2xl font-bold">911</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function emergencyAlert() {
+    if (confirm('Are you in immediate danger? This will alert emergency services.')) {
+        // In a real implementation, this would send an alert to emergency services
+        alert('Emergency alert sent! Help is on the way.');
+        // Redirect to emergency form
+        window.location.href = 'pages/emergencyForm.php';
+    }
+}
+</script>
+
+<?php
+// Include footer
+include 'includes/footer.php';
+?>
 
     .typing-animation {
       border-right: 2px solid rgba(255, 255, 255, 0.75);
