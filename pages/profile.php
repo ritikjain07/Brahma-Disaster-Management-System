@@ -1,21 +1,15 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../auth/login.php");
     exit();
 }
 
-$server = "localhost";
-$username = "root";
-$password = "";
-$database = "brahma_db";
+require_once('../database/config.php');
 
-// Create a connection
-$conn = new mysqli($server, $username, $password, $database);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Get database connection (mysqli)
+if (!$conn) {
+    die("Database connection failed. Please try again later.");
 }
 
 $user_id = $_SESSION['user_id'];
@@ -37,11 +31,28 @@ $conn->close();
     <title>Profile - Brahma</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 h-screen">
+<body class="bg-gray-100 min-h-screen">
+    <!-- Navigation Header -->
+    <header class="bg-gray-800 text-white py-4 px-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="../index.php" class="flex items-center space-x-3">
+                <img src="../assets/images/logo_brahma.png" alt="Brahma Logo" class="h-10">
+                <span class="text-2xl font-bold">Brahma</span>
+            </a>
+            <nav class="flex space-x-6">
+                <a href="../index.php" class="hover:text-gray-300">Home</a>
+                <a href="mapify.php" class="hover:text-gray-300">Map</a>
+                <a href="helpForm.php" class="hover:text-gray-300">Help</a>
+                <a href="../auth/logout.php" class="hover:text-gray-300">Logout</a>
+            </nav>
+        </div>
+    </header>
+
     <div class="max-w-4xl mx-auto py-12">
         <div class="bg-white shadow overflow-hidden sm:rounded-lg">
             <div class="px-4 py-5 sm:px-6">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">User Information</h3>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">Personal details and emergency information</p>
             </div>
             <div class="border-t border-gray-200">
                 <dl>
@@ -80,8 +91,10 @@ $conn->close();
                 </dl>
             </div>
         </div>
-        <div class="mt-6">
-            <a href="logout.php" class="text-red-600 hover:text-red-900">Logout</a>
+        <div class="mt-6 text-center">
+            <a href="../auth/logout.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
+                Logout
+            </a>
         </div>
     </div>
 </body>

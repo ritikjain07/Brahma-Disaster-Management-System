@@ -1,14 +1,11 @@
 <?php
+session_start();
+require_once('../database/config.php');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "brahma_db";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+    // Get database connection (mysqli)
+    if (!$conn) {
+        die("Database connection failed. Please try again later.");
     }
 
     $latitude = $_POST['latitude'];
@@ -211,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ☰
     </span>
     <div class="logo-container">
-        <img src="logo.png" alt="Brahma Logo">
+        <img src="../assets/images/logo_brahma.png" alt="Brahma Logo">
         <span>Brahma</span>
     </div>
     <div style="width: 40px;"></div>
@@ -219,11 +216,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div id="sidebar">
     <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
-    <a href="index.php">Home</a>
-    <a href="info.php">Disaster Information</a>
-    <a href="emergencyForm.php">Emergency Contacts</a>
-    <a href="search.php">Search Resources</a>
-    <a href="profile.php">My Profile</a>
+    <a href="../index.php">Home</a>
+    <a href="../pages/info.php">Disaster Information</a>
+    <a href="../pages/about-page.php">About</a>
+    <a href="../pages/service-page.php">Services</a>
+    <a href="../pages/emergencyForm.php">Emergency Form</a>
+    <a href="../pages/helpForm.php">Help Form</a>
+    <a href="../pages/missing_person.php">Missing Person</a>
+    <a href="../pages/survival_tips.php">Survival Tips</a>
+    <a href="../pages/profile.php">My Profile</a>
+    <a href="../auth/login.php">Login</a>
+    <a href="../auth/signup.php">Sign Up</a>
 </div>
 
 <div class="map-container">

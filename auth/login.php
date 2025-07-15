@@ -1,16 +1,12 @@
 <?php
 session_start();
-$server = "localhost";
-$username = "root";
-$password = "";
-$database = "brahma_db";
+require_once '../database/config.php';
 
-// Create a connection
-$conn = new mysqli($server, $username, $password, $database);
+// Get database connection
+$conn = getConnection();
 
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if (!$conn) {
+    die("Database connection failed. Please try again later.");
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -41,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     document.addEventListener('DOMContentLoaded', function() { 
                         showSuccess('Login Successful! Redirecting...'); 
                         setTimeout(function() {
-                            window.location.href = 'index.php';
+                            window.location.href = '../index.php';
                         }, 1500);
                     });
                   </script>";
@@ -52,8 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->close();
     }
 }
-
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -164,10 +158,10 @@ $conn->close();
     }
   </style>
 </head>
-<body class="bg-cover bg-center h-screen flex justify-center items-center" style="background-image: url('bgidn.jpg')">
+<body class="bg-cover bg-center h-screen flex justify-center items-center" style="background-image: url('../assets/images/bgidn.jpg')">>
   <div class="login-container p-10 rounded-xl shadow-2xl max-w-md w-full text-white animated fadeIn">
     <div class="flex justify-center mb-8">
-      <img src="logo_brahma.png" alt="Brahma Logo" class="h-20 drop-shadow-lg">
+      <img src="../assets/images/logo_brahma.png" alt="Brahma Logo" class="h-20 drop-shadow-lg">
     </div>
     
     <h1 class="text-3xl font-bold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">Welcome Back</h1>
@@ -212,7 +206,7 @@ $conn->close();
       </button>
     </form>
     
-    <div class="relative flex py-5 items-center mt-6">
+    <!-- <div class="relative flex py-5 items-center mt-6">
       <div class="flex-grow border-t border-gray-700"></div>
       <span class="flex-shrink mx-4 text-gray-400 text-sm">or continue with</span>
       <div class="flex-grow border-t border-gray-700"></div>
@@ -228,7 +222,7 @@ $conn->close();
       <button class="social-btn flex justify-center items-center py-2 px-4 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700">
         <i class="fab fa-apple text-white"></i>
       </button>
-    </div>
+    </div> -->
     
     <div class="mt-8 text-center">
       <p class="text-gray-400">Don't have an account? <a href="signup.php" class="text-indigo-400 hover:text-indigo-300 font-medium">Sign up</a></p>

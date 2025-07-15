@@ -1,16 +1,10 @@
 <?php
-// Database connection details
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "brahma_db";
+session_start();
+require_once('../database/config.php');
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Get database connection (mysqli)
+if (!$conn) {
+    die("Database connection failed. Please try again later.");
 }
 
 // Function to sanitize input data
@@ -34,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Handle file upload
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $target_dir = "uploads/";
+        $target_dir = "../uploads/";
         $target_file = $target_dir . basename($_FILES["image"]["name"]);
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
@@ -57,11 +51,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (empty($alert_message)) {
-        // SQL query to insert data into HelpRequests table
-        $sql = "INSERT INTO HelpRequests (disaster_type, urgency_level, additional_info, image)
-                VALUES ('$disaster_type', '$urgency', '$additional_info', '$image')";
+        // Use prepared statements to prevent SQL injection
+        $stmt = $conn->prepare("INSERT INTO HelpRequests (disaster_type, urgency_level, additional_info, image) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $disaster_type, $urgency, $additional_info, $image);
 
-        if ($conn->query($sql) === TRUE) {
+        if ($stmt->execute()) {
             $alert_message = "Your request has been sent.";
             // Redirect to mapify.php after 2 seconds
             echo '<script>
@@ -70,8 +64,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     }, 2000);
                   </script>';
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            $alert_message = "Error: Unable to submit your request. Please try again.";
         }
+        $stmt->close();
     }
 }
 
@@ -105,11 +100,11 @@ $conn->close();
   <header class="bg-black text-white w-full py-4 shadow-md fixed top-0 z-50">
     <div class="container mx-auto px-4 flex justify-between items-center">
       <div class="flex items-center justify-center w-full">
-        <img src="logo.png" alt="Brahma Logo" class="h-12 mr-2">
+        <img src="../assets/images/logo_brahma.png" alt="Brahma Logo" class="h-12 mr-2">
         <span class="text-2xl font-bold">Brahma</span>
       </div>
       <nav class="flex space-x-4">
-        <a href="main.html" class="hover:text-blue-500 mx-2">Home</a>
+        <a href="../index.php" class="hover:text-blue-500 mx-2">Home</a>
         <!-- <a href="index.html#about" class="hover:text-blue-500 mx-2">About Us</a>
         <a href="index.html#services" class="hover:text-blue-500 mx-2">Services</a>
         <a href="donation2.html" class="hover:text-blue-500 mx-2">Donation</a>

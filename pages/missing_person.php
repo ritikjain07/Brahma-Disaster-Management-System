@@ -1,42 +1,10 @@
 <?php
-// Database connection details
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "brahma_db";
+session_start();
+require_once('../database/config.php');
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Create database if not exists
-$sql = "CREATE DATABASE IF NOT EXISTS $dbname";
-if ($conn->query($sql) === TRUE) {
-    $conn->select_db($dbname);
-} else {
-    die("Error creating database: " . $conn->error);
-}
-
-// Create table if not exists
-$sql = "CREATE TABLE IF NOT EXISTS MissingPersons (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
-    age INT,
-    dob DATE,
-    sex CHAR(1),
-    gender VARCHAR(50),
-    government_id VARCHAR(100),
-    description TEXT,
-    image_url VARCHAR(255) NOT NULL,
-    reported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)";
-if ($conn->query($sql) !== TRUE) {
-    die("Error creating table: " . $conn->error);
+// Get database connection (mysqli)
+if (!$conn) {
+    die("Database connection failed. Please try again later.");
 }
 
 // Function to sanitize input data
@@ -216,15 +184,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center">
-          <a href="index.php" class="text-white font-bold text-xl">
-            <img src="logo.png" alt="Brahma Logo" class="h-8 w-auto inline-block mr-2">
+          <a href="../index.php" class="text-white font-bold text-xl">
+            <img src="../assets/images/logo_brahma.png" alt="Brahma Logo" class="h-8 w-auto inline-block mr-2">
             Brahma
           </a>
         </div>
         <div class="flex space-x-4">
-          <a href="index.php" class="text-white hover:text-indigo-200 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+          <a href="../index.php" class="text-white hover:text-indigo-200 px-3 py-2 rounded-md text-sm font-medium">Home</a>
           <a href="mapify.php" class="text-white hover:text-indigo-200 px-3 py-2 rounded-md text-sm font-medium">Map</a>
-          <a href="search.php" class="text-white hover:text-indigo-200 px-3 py-2 rounded-md text-sm font-medium">Search</a>
+          <a href="helpForm.php" class="text-white hover:text-indigo-200 px-3 py-2 rounded-md text-sm font-medium">Help</a>
         </div>
       </div>
     </div>

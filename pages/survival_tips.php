@@ -23,7 +23,7 @@
         }
         
         body {
-            background: url('bgidn.jpg') no-repeat center center fixed;
+            background: url('../assets/images/bgidn.jpg') no-repeat center center fixed;
             background-size: cover;
             color: #333;
             position: relative;
@@ -193,17 +193,17 @@
     <!-- Navigation Bar -->
     <header class="navbar text-white py-4 px-6 sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="index.php" class="flex items-center space-x-3">
-                <img src="logo.png" alt="Brahma Logo" class="h-10">
+            <a href="../index.php" class="flex items-center space-x-3">
+                <img src="../assets/images/logo_brahma.png" alt="Brahma Logo" class="h-10">
                 <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">Brahma</span>
             </a>
             
             <nav class="hidden md:flex space-x-8">
-                <a href="index.php" class="nav-link text-gray-300 hover:text-white transition">Home</a>
+                <a href="../index.php" class="nav-link text-gray-300 hover:text-white transition">Home</a>
                 <a href="mapify.php" class="nav-link text-gray-300 hover:text-white transition">Map</a>
                 <a href="survival_tips.php" class="nav-link text-white font-medium">Survival Tips</a>
-                <a href="emergency_contacts.php" class="nav-link text-gray-300 hover:text-white transition">Emergency</a>
-                <a href="about-page.php" class="nav-link text-gray-300 hover:text-white transition">About</a>
+                <a href="emergencyForm.php" class="nav-link text-gray-300 hover:text-white transition">Emergency</a>
+                <a href="../pages/about-page.php" class="nav-link text-gray-300 hover:text-white transition">About</a>
             </nav>
             
             <button class="md:hidden text-white text-2xl focus:outline-none">
@@ -215,11 +215,11 @@
     <!-- Mobile Menu (Hidden by default) -->
     <div class="hidden bg-gray-900 text-white p-4 md:hidden">
         <nav class="flex flex-col space-y-4">
-            <a href="index.php" class="py-2 hover:text-indigo-400 transition">Home</a>
+            <a href="../index.php" class="py-2 hover:text-indigo-400 transition">Home</a>
             <a href="mapify.php" class="py-2 hover:text-indigo-400 transition">Map</a>
             <a href="survival_tips.php" class="py-2 text-indigo-400 font-medium">Survival Tips</a>
-            <a href="emergency_contacts.php" class="py-2 hover:text-indigo-400 transition">Emergency</a>
-            <a href="about-page.php" class="py-2 hover:text-indigo-400 transition">About</a>
+            <a href="emergencyForm.php" class="py-2 hover:text-indigo-400 transition">Emergency</a>
+            <a href="../pages/about-page.php" class="py-2 hover:text-indigo-400 transition">About</a>
         </nav>
     </div>
 

@@ -1,25 +1,35 @@
 <?php
+session_start();
+
 // Load PHPMailer classes
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'PHPMailer-master/src/Exception.php';
-require 'PHPMailer-master/src/PHPMailer.php';
-require 'PHPMailer-master/src/SMTP.php';
+// Check if PHPMailer files exist and load them
+$phpmailer_available = false;
+if (file_exists('../libs/PHPMailer-master/src/Exception.php') && 
+    file_exists('../libs/PHPMailer-master/src/PHPMailer.php') && 
+    file_exists('../libs/PHPMailer-master/src/SMTP.php')) {
+    
+    require '../libs/PHPMailer-master/src/Exception.php';
+    require '../libs/PHPMailer-master/src/PHPMailer.php';
+    require '../libs/PHPMailer-master/src/SMTP.php';
+    
+    $phpmailer_available = true;
+}
 
-// Database connection details
-$servername = "localhost";
-$username = "root"; 
-$password = ""; 
-$dbname = "brahma_db"; 
+// Database connection
+require_once('../database/config.php');
+
+// Ensure we have a valid connection
+if (!$conn || $conn->connect_error) {
+    die("Database connection failed. Please try again later.");
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+    // Ensure we have a valid connection before processing
+    if (!$conn || $conn->connect_error) {
+        die("Database connection failed. Please try again later.");
     }
 
     // Get form data (sanitize input if necessary)
@@ -34,71 +44,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Execute the statement
     if ($stmt->execute()) {
-        // Send thank you email using PHPMailer
-        $mail = new PHPMailer(true);
-        try {
-            //Server settings
-            $mail->SMTPDebug = 0;                                       // Enable verbose debug output
-            $mail->isSMTP();                                            // Set mailer to use SMTP
-            $mail->Host       = 'smtp.gmail.com';                     // Specify main and backup SMTP servers
-            $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-            $mail->Username   = 'angshumanmahato@gmail.com';               // SMTP username
-            $mail->Password   = 'jyqejqbntmadntjl';                  // SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption, PHPMailer::ENCRYPTION_SMTPS also accepted
-            $mail->Port       = 587;                                    // TCP port to connect to
+        // Send thank you email using PHPMailer (if available)
+        if ($phpmailer_available) {
+            $mail = new PHPMailer(true);
+            try {
+                //Server settings
+                $mail->SMTPDebug = 0;                                       // Enable verbose debug output
+                $mail->isSMTP();                                            // Set mailer to use SMTP
+                $mail->Host       = 'smtp.gmail.com';                     // Specify main and backup SMTP servers
+                $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+                $mail->Username   = 'angshumanmahato@gmail.com';               // SMTP username
+                $mail->Password   = 'jyqejqbntmadntjl';                  // SMTP password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption, PHPMailer::ENCRYPTION_SMTPS also accepted
+                $mail->Port       = 587;                                    // TCP port to connect to
 
-            //Recipients
-            $mail->setFrom('no-reply@brahma.com', 'Brahma');
-            $mail->addAddress($email, $name);                           // Add a recipient
+                //Recipients
+                $mail->setFrom('no-reply@brahma.com', 'Brahma');
+                $mail->addAddress($email, $name);                           // Add a recipient
 
-            // Content
-            $mail->isHTML(true);                                        // Set email format to HTML
-            $mail->Subject = 'Thank you for your donation!';
-            $mail->Body    = "Dear $name,<br><br>Thank you for your generous donation of INR $amount to Brahma Disaster Management System. Your support helps us to continue our mission to leverage cutting-edge technology for effective disaster response and relief operations.<br><br>Best regards,<br>Brahma Team";
+                // Content
+                $mail->isHTML(true);                                        // Set email format to HTML
+                $mail->Subject = 'Thank you for your donation!';
+                $mail->Body    = "Dear $name,<br><br>Thank you for your generous donation of INR $amount to Brahma Disaster Management System. Your support helps us to continue our mission to leverage cutting-edge technology for effective disaster response and relief operations.<br><br>Best regards,<br>Brahma Team";
 
-            $mail->send();
-            //echo "<script>alert('Donation saved successfully and email sent');</script>";
-        } catch (Exception $e) {
-            echo "<script>alert('Donation saved successfully but email could not be sent. Mailer Error: {$mail->ErrorInfo}');</script>";
+                $mail->send();
+                //echo "<script>alert('Donation saved successfully and email sent');</script>";
+            } catch (Exception $e) {
+                echo "<script>alert('Donation saved successfully but email could not be sent. Mailer Error: {$mail->ErrorInfo}');</script>";
+            }
+        } else {
+            echo "<script>alert('Donation saved successfully! PHPMailer not available for email confirmation.');</script>";
         }
     } else {
         echo "<script>alert('Error saving donation');</script>";
     }
 
     $stmt->close();
-    $conn->close();
 }
 
 // Fetch recent donors
 $recent_donors = [];
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-$sql = "SELECT name, amount FROM donations ORDER BY id DESC LIMIT 5";
-$result = $conn->query($sql);
-if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        $recent_donors[] = $row;
+if ($conn && !$conn->connect_error) {
+    $sql = "SELECT name, amount FROM donations ORDER BY donation_date DESC LIMIT 5";
+    $result = $conn->query($sql);
+    if ($result && $result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $recent_donors[] = $row;
+        }
     }
+} else {
+    error_log("Database connection issue when fetching recent donors");
 }
-$conn->close();
 
 // Calculate total donations
 $total_amount = 0;
 $donor_count = 0;
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if ($conn && !$conn->connect_error) {
+    $sql = "SELECT SUM(amount) as total, COUNT(*) as count FROM donations";
+    $result = $conn->query($sql);
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $total_amount = $row['total'] ?? 0;
+        $donor_count = $row['count'] ?? 0;
+    }
+} else {
+    error_log("Database connection issue when calculating totals");
 }
-$sql = "SELECT SUM(amount) as total, COUNT(*) as count FROM donations";
-$result = $conn->query($sql);
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $total_amount = $row['total'];
-    $donor_count = $row['count'];
+
+// Close the connection after all database operations are complete
+if ($conn && !$conn->connect_error) {
+    $conn->close();
 }
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -121,7 +137,7 @@ $conn->close();
     }
     
     body {
-      background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('bgidn.jpg');
+      background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/images/bgidn.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -224,15 +240,15 @@ $conn->close();
     <div class="container mx-auto px-6 py-3">
       <div class="flex justify-between items-center">
         <div class="flex items-center">
-          <img src="logo_brahma.png" alt="Brahma Logo" class="h-10 mr-3">
+          <img src="../assets/images/logo_brahma.png" alt="Brahma Logo" class="h-10 mr-3">
           <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500">BRAHMA</span>
         </div>
         <div class="hidden md:flex items-center space-x-8">
-          <a href="index.php" class="text-gray-300 hover:text-white transition duration-300">Home</a>
-          <a href="#" class="text-gray-300 hover:text-white transition duration-300">About Us</a>
-          <a href="#" class="text-gray-300 hover:text-white transition duration-300">Services</a>
-          <a href="contact-page.php" class="text-gray-300 hover:text-white transition duration-300">Contact</a>
-          <a href="login.php" class="px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 transition duration-300">Login</a>
+          <a href="../index.php" class="text-gray-300 hover:text-white transition duration-300">Home</a>
+          <a href="../pages/about-page.php" class="text-gray-300 hover:text-white transition duration-300">About Us</a>
+          <a href="../pages/service-page.php" class="text-gray-300 hover:text-white transition duration-300">Services</a>
+          <a href="../pages/contact-page.php" class="text-gray-300 hover:text-white transition duration-300">Contact</a>
+          <a href="../auth/login.php" class="px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 transition duration-300">Login</a>
         </div>
         <div class="md:hidden">
           <button id="mobile-menu-button" class="text-gray-300 hover:text-white">
@@ -244,11 +260,11 @@ $conn->close();
       </div>
       <!-- Mobile menu, toggle classes based on menu state -->
       <div id="mobile-menu" class="md:hidden hidden mt-3">
-        <a href="index.php" class="block py-2 text-gray-300 hover:text-white">Home</a>
-        <a href="#" class="block py-2 text-gray-300 hover:text-white">About Us</a>
-        <a href="#" class="block py-2 text-gray-300 hover:text-white">Services</a>
-        <a href="contact-page.php" class="block py-2 text-gray-300 hover:text-white">Contact</a>
-        <a href="login.php" class="block py-2 text-gray-300 hover:text-white">Login</a>
+        <a href="../index.php" class="block py-2 text-gray-300 hover:text-white">Home</a>
+        <a href="../pages/about-page.php" class="block py-2 text-gray-300 hover:text-white">About Us</a>
+        <a href="../pages/service-page.php" class="block py-2 text-gray-300 hover:text-white">Services</a>
+        <a href="../pages/contact-page.php" class="block py-2 text-gray-300 hover:text-white">Contact</a>
+        <a href="../auth/login.php" class="block py-2 text-gray-300 hover:text-white">Login</a>
       </div>
     </div>
   </nav>
@@ -483,7 +499,7 @@ $conn->close();
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
           <div class="flex items-center mb-4">
-            <img src="logo_brahma.png" alt="Brahma Logo" class="h-10 mr-3">
+            <img src="../assets/images/logo_brahma.png" alt="Brahma Logo" class="h-10 mr-3">
             <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500">BRAHMA</span>
           </div>
           <p class="text-gray-400 text-sm">Leveraging technology for effective disaster response and relief operations.</p>
@@ -573,7 +589,7 @@ $conn->close();
         currency: "INR",
         name: "Brahma",
         description: "Disaster Management Donation",
-        image: "logo_brahma.png", 
+        image: "../assets/images/logo_brahma.png", 
         handler: function (response) {
           document.getElementById('payment_id').value = response.razorpay_payment_id;
           document.getElementById('donation-form').submit();

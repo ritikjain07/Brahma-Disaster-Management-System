@@ -1,3 +1,52 @@
+<?php
+session_start();
+require_once('../database/config.php');
+
+$error_message = '';
+$success_message = '';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validate input
+    $first_name = trim($_POST['first_name']);
+    $last_name = trim($_POST['last_name']);
+    $mobile = trim($_POST['mobile']);
+    $email = trim($_POST['email']);
+    $address = trim($_POST['address']);
+    $password = $_POST['password'];
+    $emergency_contact = trim($_POST['emergency_contact']) ?: null;
+    $blood_type = $_POST['blood_type'] ?: null;
+    $medical_conditions = trim($_POST['medical_conditions']) ?: null;
+    
+    // Basic validation
+    if (empty($first_name) || empty($last_name) || empty($mobile) || empty($email) || empty($address) || empty($password)) {
+        $error_message = "All required fields must be filled.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error_message = "Please enter a valid email address.";
+    } elseif (strlen($password) < 8) {
+        $error_message = "Password must be at least 8 characters long.";
+    } else {
+        // Check if email already exists
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        
+        if ($stmt->rowCount() > 0) {
+            $error_message = "Email address already exists. Please use a different email.";
+        } else {
+            // Hash password and insert user
+            $password_hash = password_hash($password, PASSWORD_BCRYPT);
+            
+            $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, mobile, email, address, password, emergency_contact, blood_type, medical_conditions) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            
+            if ($stmt->execute([$first_name, $last_name, $mobile, $email, $address, $password_hash, $emergency_contact, $blood_type, $medical_conditions])) {
+                $success_message = "Account created successfully! Redirecting to login...";
+                header("refresh:2;url=login.php");
+            } else {
+                $error_message = "Error creating account. Please try again.";
+            }
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -126,10 +175,10 @@
     }
   </style>
 </head>
-<body class="bg-cover bg-center min-h-screen flex justify-center items-center py-10" style="background-image: url('bgidn.jpg')">
+<body class="bg-cover bg-center min-h-screen flex justify-center items-center py-10" style="background-image: url('../assets/images/bgidn.jpg')">
   <div class="signup-container p-8 md:p-10 rounded-xl shadow-2xl max-w-4xl w-full text-white animated fadeIn">
     <div class="flex justify-center mb-6">
-      <img src="logo_brahma.png" alt="Brahma Logo" class="h-16 drop-shadow-lg">
+      <img src="../assets/images/logo_brahma.png" alt="Brahma Logo" class="h-16 drop-shadow-lg">
     </div>
     
     <h1 class="text-3xl font-bold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">Create Your Account</h1>
@@ -150,6 +199,7 @@
                 <i class="fas fa-user text-gray-500"></i>
               </div>
               <input type="text" name="first_name" id="first_name" placeholder="Enter your first name" required 
+                     value="<?php echo htmlspecialchars($_POST['first_name'] ?? ''); ?>"
                      class="form-input pl-10 block w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
           </div>
@@ -161,6 +211,7 @@
                 <i class="fas fa-user text-gray-500"></i>
               </div>
               <input type="text" name="last_name" id="last_name" placeholder="Enter your last name" required 
+                     value="<?php echo htmlspecialchars($_POST['last_name'] ?? ''); ?>"
                      class="form-input pl-10 block w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
           </div>
@@ -172,6 +223,7 @@
                 <i class="fas fa-envelope text-gray-500"></i>
               </div>
               <input type="email" name="email" id="email" placeholder="Enter your email" required 
+                     value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
                      class="form-input pl-10 block w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
           </div>
@@ -205,6 +257,7 @@
                 <i class="fas fa-mobile-alt text-gray-500"></i>
               </div>
               <input type="text" name="mobile" id="mobile" placeholder="Enter your mobile number" required 
+                     value="<?php echo htmlspecialchars($_POST['mobile'] ?? ''); ?>"
                      class="form-input pl-10 block w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
           </div>
@@ -216,6 +269,7 @@
                 <i class="fas fa-home text-gray-500"></i>
               </div>
               <input type="text" name="address" id="address" placeholder="Enter your address" required 
+                     value="<?php echo htmlspecialchars($_POST['address'] ?? ''); ?>"
                      class="form-input pl-10 block w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
           </div>
@@ -227,6 +281,7 @@
                 <i class="fas fa-phone-alt text-gray-500"></i>
               </div>
               <input type="text" name="emergency_contact" id="emergency_contact" placeholder="Emergency contact number" 
+                     value="<?php echo htmlspecialchars($_POST['emergency_contact'] ?? ''); ?>"
                      class="form-input pl-10 block w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
           </div>
@@ -241,14 +296,14 @@
                 <select name="blood_type" id="blood_type" 
                        class="form-input pl-10 block w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
                   <option value="">Select</option>
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
+                  <option value="A+" <?php echo (($_POST['blood_type'] ?? '') == 'A+') ? 'selected' : ''; ?>>A+</option>
+                  <option value="A-" <?php echo (($_POST['blood_type'] ?? '') == 'A-') ? 'selected' : ''; ?>>A-</option>
+                  <option value="B+" <?php echo (($_POST['blood_type'] ?? '') == 'B+') ? 'selected' : ''; ?>>B+</option>
+                  <option value="B-" <?php echo (($_POST['blood_type'] ?? '') == 'B-') ? 'selected' : ''; ?>>B-</option>
+                  <option value="AB+" <?php echo (($_POST['blood_type'] ?? '') == 'AB+') ? 'selected' : ''; ?>>AB+</option>
+                  <option value="AB-" <?php echo (($_POST['blood_type'] ?? '') == 'AB-') ? 'selected' : ''; ?>>AB-</option>
+                  <option value="O+" <?php echo (($_POST['blood_type'] ?? '') == 'O+') ? 'selected' : ''; ?>>O+</option>
+                  <option value="O-" <?php echo (($_POST['blood_type'] ?? '') == 'O-') ? 'selected' : ''; ?>>O-</option>
                 </select>
               </div>
             </div>
@@ -260,6 +315,7 @@
                   <i class="fas fa-notes-medical text-gray-500"></i>
                 </div>
                 <input type="text" name="medical_conditions" id="medical_conditions" placeholder="Any conditions" 
+                       value="<?php echo htmlspecialchars($_POST['medical_conditions'] ?? ''); ?>"
                        class="form-input pl-10 block w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
               </div>
             </div>
@@ -277,12 +333,17 @@
       </button>
     </form>
     
-    <div id="success-message" class="mt-4 py-3 px-4 bg-green-500/20 border border-green-500 text-green-400 rounded-lg text-center hidden">
-      <i class="fas fa-check-circle mr-2"></i> Sign up successful! Please wait while we redirect you.
+    <?php if ($success_message): ?>
+    <div class="mt-4 py-3 px-4 bg-green-500/20 border border-green-500 text-green-400 rounded-lg text-center">
+      <i class="fas fa-check-circle mr-2"></i> <?php echo htmlspecialchars($success_message); ?>
     </div>
-    <div id="error-message" class="mt-4 py-3 px-4 bg-red-500/20 border border-red-500 text-red-400 rounded-lg text-center hidden">
-      <i class="fas fa-exclamation-circle mr-2"></i> Error: Unable to sign up. Please try again.
+    <?php endif; ?>
+    
+    <?php if ($error_message): ?>
+    <div class="mt-4 py-3 px-4 bg-red-500/20 border border-red-500 text-red-400 rounded-lg text-center">
+      <i class="fas fa-exclamation-circle mr-2"></i> <?php echo htmlspecialchars($error_message); ?>
     </div>
+    <?php endif; ?>
     
     <div class="mt-8 text-center">
       <p class="text-gray-400">Already have an account? <a href="login.php" class="text-indigo-400 hover:text-indigo-300 font-medium">Sign in</a></p>
@@ -350,52 +411,32 @@
           }, 0);
         });
       });
+      
+      // Form validation
+      document.getElementById('signup-form').addEventListener('submit', function(e) {
+        const password = document.getElementById('password').value;
+        const email = document.getElementById('email').value;
+        
+        if (password.length < 8) {
+          e.preventDefault();
+          alert('Password must be at least 8 characters long.');
+          return;
+        }
+        
+        if (!email.includes('@')) {
+          e.preventDefault();
+          alert('Please enter a valid email address.');
+          return;
+        }
+        
+        const terms = document.getElementById('terms').checked;
+        if (!terms) {
+          e.preventDefault();
+          alert('Please accept the terms and conditions.');
+          return;
+        }
+      });
     });
-
-    <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      $servername = "localhost";
-      $username = "root"; // default username for XAMPP
-      $password = ""; // default password for XAMPP
-      $dbname = "brahma_db"; // replace with your database name
-
-      // Create connection
-      $conn = new mysqli($servername, $username, $password, $dbname);
-
-      // Check connection
-      if ($conn->connect_error) {
-        echo 'document.getElementById("error-message").classList.remove("hidden");';
-        echo 'document.getElementById("error-message").textContent = "Connection failed: Database error.";';
-        die("Connection failed: " . $conn->connect_error);
-      }
-
-      // Prepare and bind
-      $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, mobile, email, address, password, emergency_contact, blood_type, medical_conditions) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-      $stmt->bind_param("sssssssss", $first_name, $last_name, $mobile, $email, $address, $password_hash, $emergency_contact, $blood_type, $medical_conditions);
-
-      // Set parameters and execute
-      $first_name = $_POST['first_name'];
-      $last_name = $_POST['last_name'];
-      $mobile = $_POST['mobile'];
-      $email = $_POST['email'];
-      $address = $_POST['address'];
-      $password_hash = password_hash($_POST['password'], PASSWORD_BCRYPT);
-      $emergency_contact = $_POST['emergency_contact'] ?? null;
-      $blood_type = $_POST['blood_type'] ?? null;
-      $medical_conditions = $_POST['medical_conditions'] ?? null;
-
-      if ($stmt->execute()) {
-        echo 'document.getElementById("success-message").classList.remove("hidden");';
-        echo 'setTimeout(function() { window.location.href = "index.php"; }, 2000);';
-      } else {
-        echo 'document.getElementById("error-message").classList.remove("hidden");';
-        echo 'document.getElementById("error-message").textContent = "Error: ' . $stmt->error . '";';
-      }
-
-      $stmt->close();
-      $conn->close();
-    }
-    ?>
   </script>
 </body>
 </html>
