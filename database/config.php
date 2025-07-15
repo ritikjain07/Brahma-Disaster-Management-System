@@ -12,20 +12,30 @@ define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
 define('DB_NAME', 'brahma_db');
 
-// Create connection
-$conn = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+// Initialize connection variable
+$conn = null;
+$db_connection_error = null;
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Try to create connection
+try {
+    $conn = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+    
+    // Check connection
+    if ($conn->connect_error) {
+        $db_connection_error = "Connection failed: " . $conn->connect_error;
+        $conn = null;
+    } else {
+        // Set charset to utf8
+        $conn->set_charset("utf8");
+    }
+} catch (Exception $e) {
+    $db_connection_error = "Database connection error: " . $e->getMessage();
+    $conn = null;
 }
-
-// Set charset to utf8
-$conn->set_charset("utf8");
 
 /**
  * Function to get database connection
- * @return mysqli Database connection object
+ * @return mysqli|null Database connection object or null if not connected
  */
 function getConnection() {
     global $conn;

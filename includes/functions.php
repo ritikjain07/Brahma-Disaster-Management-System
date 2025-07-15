@@ -6,7 +6,14 @@
  * @version 1.0
  */
 
-require_once 'database/config.php';
+// Try to include database config
+try {
+    require_once __DIR__ . '/../database/config.php';
+} catch (Exception $e) {
+    // Database connection failed, continue without database
+    $conn = null;
+    $db_connection_error = "Database configuration error: " . $e->getMessage();
+}
 
 /**
  * Sanitize input data
@@ -171,6 +178,11 @@ function uploadFile($file, $uploadDir, $allowedTypes = ['jpg', 'jpeg', 'png', 'g
 function logActivity($action, $description, $userId = null) {
     global $conn;
     
+    // Skip if no database connection
+    if (!$conn) {
+        return;
+    }
+    
     $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
     $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
     
@@ -196,6 +208,11 @@ function formatDate($date) {
  */
 function getUserById($userId) {
     global $conn;
+    
+    // Return null if no database connection
+    if (!$conn) {
+        return null;
+    }
     
     $stmt = $conn->prepare("SELECT id, username, email, first_name, last_name, phone, address, city, state FROM users WHERE id = ?");
     $stmt->bind_param("i", $userId);
