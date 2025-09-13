@@ -1,9 +1,6 @@
 <?php
 session_start();
 
-// Load sensitive configuration
-require_once('../config/sensitive.php');
-
 // Load PHPMailer classes
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -23,9 +20,6 @@ if (file_exists('../libs/PHPMailer-master/src/Exception.php') &&
 
 // Database connection
 require_once('../database/config.php');
-
-// Load sensitive configuration
-require_once('../config/sensitive.php');
 
 // Ensure we have a valid connection
 if (!$conn || $conn->connect_error) {
@@ -57,15 +51,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 //Server settings
                 $mail->SMTPDebug = 0;                                       // Enable verbose debug output
                 $mail->isSMTP();                                            // Set mailer to use SMTP
-                $mail->Host       = SMTP_HOST;                              // Specify main and backup SMTP servers
+                $mail->Host       = 'smtp.gmail.com';                     // Specify main and backup SMTP servers
                 $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-                $mail->Username   = SMTP_USERNAME;                          // SMTP username
-                $mail->Password   = SMTP_PASSWORD;                          // SMTP password
+                $mail->Username   = 'angshumanmahato@gmail.com';               // SMTP username
+                $mail->Password   = 'jyqejqbntmadntjl';                  // SMTP password
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption, PHPMailer::ENCRYPTION_SMTPS also accepted
-                $mail->Port       = SMTP_PORT;                              // TCP port to connect to
+                $mail->Port       = 587;                                    // TCP port to connect to
 
                 //Recipients
-                $mail->setFrom(EMAIL_FROM, EMAIL_FROM_NAME);
+                $mail->setFrom('no-reply@brahma.com', 'Brahma');
                 $mail->addAddress($email, $name);                           // Add a recipient
 
                 // Content
@@ -590,7 +584,7 @@ if ($conn && !$conn->connect_error) {
       }
       
       var options = {
-        key: "<?php echo RAZORPAY_KEY_ID; ?>", 
+        key: "rzp_test_XxcBi4GZcRiCLQ", 
         amount: amount * 100, 
         currency: "INR",
         name: "Brahma",

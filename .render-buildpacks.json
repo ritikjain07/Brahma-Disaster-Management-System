@@ -1,0 +1,7 @@
+{
+  "buildpacks": [
+    {
+      "name": "heroku/php"
+    }
+  ]
+}

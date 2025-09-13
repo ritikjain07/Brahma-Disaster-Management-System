@@ -1,10 +1,16 @@
 <?php
-// Database connection
-require_once('../database/config.php');
+// Database connection details
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "brahma_db";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
-if (!$conn || $conn->connect_error) {
-    die("Database connection failed. Please try again later.");
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
 // Fetch missing persons from the database
