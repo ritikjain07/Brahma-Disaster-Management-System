@@ -2,10 +2,25 @@ services:
   - type: web
     name: brahma-disaster-management
     runtime: php
-    plan: free
-    env: php
     buildCommand: bash ./deploy.sh
     startCommand: vendor/bin/heroku-php-apache2
+    rootDir: .
+    plan: free
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - "**/*.php"
+        - "**/*.html"
+        - "**/*.css"
+        - "**/*.js"
+        - "**/*.json"
+        - "composer.*"
+        - ".buildpacks"
+        - ".render-buildpacks*"
+        - "Procfile"
+        - "deploy.sh"
+      ignoredPaths:
+        - "node_modules/**"
     envVars:
       - key: RENDER
         value: "true"
@@ -21,8 +36,15 @@ services:
         sync: false
       - key: RAZORPAY_KEY_SECRET
         sync: false
-    databases:
-      - name: brahma-disaster-db
+    buildFilter:
+      paths:
+        - "**/*.php"
+        - "composer.*"
+    healthCheckPath: /
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1
   
 databases:
   - name: brahma-disaster-db

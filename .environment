@@ -1,0 +1,2 @@
+PHP_BUILDPACK=true
+BUILDPACK=heroku/php

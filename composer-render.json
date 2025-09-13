@@ -13,5 +13,10 @@
       "email": "ritikjain4560@gmail.com"
     }
   ],
+  "scripts": {
+    "post-install-cmd": [
+      "echo 'PHP application deployed successfully on Render!'"
+    ]
+  },
   "minimum-stability": "stable"
 }
