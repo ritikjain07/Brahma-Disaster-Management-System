@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: brahma-disaster-management
+    env: php
+    buildCommand: composer install
+    startCommand: vendor/bin/heroku-php-apache2
+    envVars:
+      - key: DB_HOST
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+  
+databases:
+  - name: brahma-disaster-db
+    databaseName: brahma_db
+    user: brahma_user
+    plan: free

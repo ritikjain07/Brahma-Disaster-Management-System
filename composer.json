@@ -1,0 +1,16 @@
+{
+  "name": "ritikjain07/brahma-disaster-management",
+  "description": "Brahma Disaster Management System",
+  "type": "project",
+  "require": {
+    "php": "^7.4|^8.0",
+    "phpmailer/phpmailer": "^6.5"
+  },
+  "authors": [
+    {
+      "name": "Ritik Jain",
+      "email": "ritikjain4560@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable"
+}
